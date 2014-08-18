@@ -8,6 +8,7 @@
 
 #import "CKViewController.h"
 #import <MapKit/MapKit.h>
+#import "CKMapPin.h"
 
 @interface CKViewController () <MKMapViewDelegate>
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
@@ -85,13 +86,64 @@
     bellPoints[5] = pin12;
     bellPoints[6] = pin11;
     
+    NSMutableDictionary *centriod = [@{@"centriod": [[CLLocation alloc] initWithLatitude:points[6].latitude longitude:points[6].longitude]} mutableCopy];
+    
+    NSMutableArray *centriods = [[NSMutableArray alloc] init];
+    [centriods addObject:centriod];
+    
     MKPolygon *bellPoly = [MKPolygon polygonWithCoordinates:bellPoints count:7];
     bellPoly.title = @"Belltown";
     [self.mapView addOverlay:bellPoly];
+
+    for(int i=0; i<10; i++)
+    {
+        [self.mapView addAnnotation:[[CKMapPin alloc]initWithCoordinate:points[i] withPinType:kReadable withTitle:[NSString stringWithFormat:@"Pin %i", i]]];
+        [self.mapView addOverlay:[MKCircle circleWithCenterCoordinate:points[i] radius:100]];
+        
+        
+        CLLocation *location1 = [[CLLocation alloc]initWithLatitude:points[6].latitude longitude:points[6].longitude];
+        CLLocation *location2 = [[CLLocation alloc]initWithLatitude:points[i+1].latitude longitude:points[i+1].longitude];
+        CLLocationDistance distance = [location1 distanceFromLocation:location2];
+        NSLog(@"pin %i -> pin %i distance %f",6, i+1, distance);
+        if(distance <500){
+            
+            float lat = ((CLLocation*)centriods[0][@"centriod"]).coordinate.latitude;
+            float longi = ((CLLocation*)centriods[0][@"centriod"]).coordinate.longitude;
+            
+            centriods[0][@"centriod"] = [[CLLocation alloc] initWithLatitude:(lat + points[i+1].latitude)*.5f
+                                                                   longitude:(longi + points[i+1].longitude)*.5f];
+            NSLog(@"%f, %f", ((CLLocation*)centriods[0][@"centriod"]).coordinate.latitude, ((CLLocation*)centriods[0][@"centriod"]).coordinate.longitude);
+        }
+        
+    }
+    
+    [self.mapView addAnnotation:[[CKMapPin alloc]initWithCoordinate:((CLLocation*)centriods[0][@"centriod"]).coordinate withPinType:kVisible withTitle:@"centriod"]];
+    [self.mapView addOverlay:[MKCircle circleWithCenterCoordinate:((CLLocation*)centriods[0][@"centriod"]).coordinate radius:150]];
+    
     
 }
 
 #pragma mark - Delegate
+-(MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation{
+    
+    if([annotation isKindOfClass:CKMapPin.class]){
+        MKPinAnnotationView *pin = (MKPinAnnotationView*)[mapView dequeueReusableAnnotationViewWithIdentifier:@"pin"];
+        if(pin == nil){
+            pin = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"pin"];
+        } else {
+            pin.annotation = annotation;
+        }
+        if ([((CKMapPin*)annotation).title isEqualToString:@"centriod"]) {
+            pin.pinColor = MKPinAnnotationColorGreen;
+        } else {
+            pin.pinColor = MKPinAnnotationColorRed;
+        }
+        pin.canShowCallout = YES;
+        return pin;
+    }
+    return nil;
+}
+
 - (MKOverlayRenderer *)mapView:(MKMapView *)mapView viewForOverlay:(id <MKOverlay>)overlay
 {
     if ([overlay isKindOfClass:[MKPolygon class]])
@@ -110,8 +162,12 @@
         aRenderer.lineWidth = 3;
         
         return aRenderer;
+    } else if ([overlay isKindOfClass:[MKCircle class]]){
+        MKCircle *currentCircle = (MKCircle*)overlay;
+        MKCircleRenderer *circleRender = [[MKCircleRenderer alloc]initWithCircle:currentCircle];
+        circleRender.fillColor = [[UIColor redColor] colorWithAlphaComponent:.2];
+        return circleRender;
     }
-    
     return nil;
 }
 

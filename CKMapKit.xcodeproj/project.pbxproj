@@ -22,6 +22,7 @@
 		0F018A57199EAFEC001481F7 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0F018A55199EAFEC001481F7 /* InfoPlist.strings */; };
 		0F018A59199EAFEC001481F7 /* CKMapKitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F018A58199EAFEC001481F7 /* CKMapKitTests.m */; };
 		0F018A63199EAFF9001481F7 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F018A62199EAFF9001481F7 /* MapKit.framework */; };
+		0FFD4E4519A295D600A5D980 /* CKMapPin.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FFD4E4419A295D600A5D980 /* CKMapPin.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +56,9 @@
 		0F018A56199EAFEC001481F7 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		0F018A58199EAFEC001481F7 /* CKMapKitTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CKMapKitTests.m; sourceTree = "<group>"; };
 		0F018A62199EAFF9001481F7 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		0FFD4E4319A295D600A5D980 /* CKMapPin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKMapPin.h; sourceTree = "<group>"; };
+		0FFD4E4419A295D600A5D980 /* CKMapPin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKMapPin.m; sourceTree = "<group>"; };
+		0FFD4E4619A2960900A5D980 /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,6 +125,9 @@
 				0F018A3F199EAFEC001481F7 /* Main.storyboard */,
 				0F018A42199EAFEC001481F7 /* CKViewController.h */,
 				0F018A43199EAFEC001481F7 /* CKViewController.m */,
+				0FFD4E4319A295D600A5D980 /* CKMapPin.h */,
+				0FFD4E4419A295D600A5D980 /* CKMapPin.m */,
+				0FFD4E4619A2960900A5D980 /* Constants.h */,
 				0F018A45199EAFEC001481F7 /* Images.xcassets */,
 				0F018A34199EAFEC001481F7 /* Supporting Files */,
 			);
@@ -254,6 +261,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0FFD4E4519A295D600A5D980 /* CKMapPin.m in Sources */,
 				0F018A3E199EAFEC001481F7 /* CKAppDelegate.m in Sources */,
 				0F018A3A199EAFEC001481F7 /* main.m in Sources */,
 				0F018A44199EAFEC001481F7 /* CKViewController.m in Sources */,
@@ -461,6 +469,7 @@
 				0F018A5E199EAFEC001481F7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		0F018A5F199EAFEC001481F7 /* Build configuration list for PBXNativeTarget "CKMapKitTests" */ = {
 			isa = XCConfigurationList;
@@ -469,6 +478,7 @@
 				0F018A61199EAFEC001481F7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
