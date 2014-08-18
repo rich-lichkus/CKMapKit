@@ -14,4 +14,6 @@ Overview
 Future Features
 ---------------
 * This can act as a filtering method for location based items. 
+* Overalys will be based on zoom level.
+* Determine region of user's location.
 
