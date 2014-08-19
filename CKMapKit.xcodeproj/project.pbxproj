@@ -23,6 +23,8 @@
 		0F018A59199EAFEC001481F7 /* CKMapKitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F018A58199EAFEC001481F7 /* CKMapKitTests.m */; };
 		0F018A63199EAFF9001481F7 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F018A62199EAFF9001481F7 /* MapKit.framework */; };
 		0FFD4E4519A295D600A5D980 /* CKMapPin.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FFD4E4419A295D600A5D980 /* CKMapPin.m */; };
+		0FFD4E5119A3B52900A5D980 /* CKCluster.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FFD4E5019A3B52900A5D980 /* CKCluster.m */; };
+		0FFD4E5419A3B9A700A5D980 /* CKClusterPins.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FFD4E5319A3B9A700A5D980 /* CKClusterPins.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +61,10 @@
 		0FFD4E4319A295D600A5D980 /* CKMapPin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKMapPin.h; sourceTree = "<group>"; };
 		0FFD4E4419A295D600A5D980 /* CKMapPin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKMapPin.m; sourceTree = "<group>"; };
 		0FFD4E4619A2960900A5D980 /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
+		0FFD4E4F19A3B52900A5D980 /* CKCluster.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CKCluster.h; path = Model/CKCluster.h; sourceTree = "<group>"; };
+		0FFD4E5019A3B52900A5D980 /* CKCluster.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CKCluster.m; path = Model/CKCluster.m; sourceTree = "<group>"; };
+		0FFD4E5219A3B9A700A5D980 /* CKClusterPins.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CKClusterPins.h; path = Model/CKClusterPins.h; sourceTree = "<group>"; };
+		0FFD4E5319A3B9A700A5D980 /* CKClusterPins.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CKClusterPins.m; path = Model/CKClusterPins.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,12 +129,10 @@
 				0F018A3C199EAFEC001481F7 /* CKAppDelegate.h */,
 				0F018A3D199EAFEC001481F7 /* CKAppDelegate.m */,
 				0F018A3F199EAFEC001481F7 /* Main.storyboard */,
-				0F018A42199EAFEC001481F7 /* CKViewController.h */,
-				0F018A43199EAFEC001481F7 /* CKViewController.m */,
-				0FFD4E4319A295D600A5D980 /* CKMapPin.h */,
-				0FFD4E4419A295D600A5D980 /* CKMapPin.m */,
-				0FFD4E4619A2960900A5D980 /* Constants.h */,
-				0F018A45199EAFEC001481F7 /* Images.xcassets */,
+				0FFD4E4B19A3B48200A5D980 /* Model */,
+				0FFD4E4719A3B44F00A5D980 /* VC */,
+				0FFD4E4919A3B45F00A5D980 /* Organizational */,
+				0FFD4E4A19A3B46D00A5D980 /* Media */,
 				0F018A34199EAFEC001481F7 /* Supporting Files */,
 			);
 			path = CKMapKit;
@@ -161,6 +165,52 @@
 				0F018A55199EAFEC001481F7 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		0FFD4E4719A3B44F00A5D980 /* VC */ = {
+			isa = PBXGroup;
+			children = (
+				0F018A42199EAFEC001481F7 /* CKViewController.h */,
+				0F018A43199EAFEC001481F7 /* CKViewController.m */,
+				0FFD4E4819A3B45800A5D980 /* Map Assests */,
+			);
+			name = VC;
+			sourceTree = "<group>";
+		};
+		0FFD4E4819A3B45800A5D980 /* Map Assests */ = {
+			isa = PBXGroup;
+			children = (
+				0FFD4E4319A295D600A5D980 /* CKMapPin.h */,
+				0FFD4E4419A295D600A5D980 /* CKMapPin.m */,
+			);
+			name = "Map Assests";
+			sourceTree = "<group>";
+		};
+		0FFD4E4919A3B45F00A5D980 /* Organizational */ = {
+			isa = PBXGroup;
+			children = (
+				0FFD4E4619A2960900A5D980 /* Constants.h */,
+			);
+			name = Organizational;
+			sourceTree = "<group>";
+		};
+		0FFD4E4A19A3B46D00A5D980 /* Media */ = {
+			isa = PBXGroup;
+			children = (
+				0F018A45199EAFEC001481F7 /* Images.xcassets */,
+			);
+			name = Media;
+			sourceTree = "<group>";
+		};
+		0FFD4E4B19A3B48200A5D980 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				0FFD4E4F19A3B52900A5D980 /* CKCluster.h */,
+				0FFD4E5019A3B52900A5D980 /* CKCluster.m */,
+				0FFD4E5219A3B9A700A5D980 /* CKClusterPins.h */,
+				0FFD4E5319A3B9A700A5D980 /* CKClusterPins.m */,
+			);
+			name = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -263,6 +313,8 @@
 			files = (
 				0FFD4E4519A295D600A5D980 /* CKMapPin.m in Sources */,
 				0F018A3E199EAFEC001481F7 /* CKAppDelegate.m in Sources */,
+				0FFD4E5419A3B9A700A5D980 /* CKClusterPins.m in Sources */,
+				0FFD4E5119A3B52900A5D980 /* CKCluster.m in Sources */,
 				0F018A3A199EAFEC001481F7 /* main.m in Sources */,
 				0F018A44199EAFEC001481F7 /* CKViewController.m in Sources */,
 			);

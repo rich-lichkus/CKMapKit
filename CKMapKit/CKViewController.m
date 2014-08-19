@@ -9,10 +9,15 @@
 #import "CKViewController.h"
 #import <MapKit/MapKit.h>
 #import "CKMapPin.h"
+#import "CKCluster.h"
+#import "CKClusterPins.h"
 
 @interface CKViewController () <MKMapViewDelegate>
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
 @property (weak, nonatomic) IBOutlet UILabel *lblLocation;
+
+@property (strong, nonatomic) NSMutableArray *downtownLocations;
+@property (strong, nonatomic) CKClusterPins *clusteredPins;
 
 @end
 
@@ -26,6 +31,11 @@
     self.mapView.delegate = self;
     self.mapView.showsUserLocation = YES;
     
+    [self.mapView.userLocation addObserver:self
+                                forKeyPath:@"location"
+                                   options:(NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld)
+                                   context:nil];
+
     // Boundary Pin
     // - CLLocationCoordinate2D
     // - Cross Streets Address
@@ -46,6 +56,20 @@
     CLLocationCoordinate2D pin12 = CLLocationCoordinate2DMake(47.609974, -122.346252);
     CLLocationCoordinate2D pin13 = CLLocationCoordinate2DMake(47.618494, -122.328968);
     CLLocationCoordinate2D pin14 = CLLocationCoordinate2DMake(47.618595, -122.358472);
+    
+    CLLocation *location1 = [[CLLocation alloc] initWithLatitude:pin1.latitude longitude:pin1.longitude];
+    CLLocation *location2 = [[CLLocation alloc] initWithLatitude:pin2.latitude longitude:pin2.longitude];
+    CLLocation *location3 = [[CLLocation alloc] initWithLatitude:pin3.latitude longitude:pin3.longitude];
+    CLLocation *location4 = [[CLLocation alloc] initWithLatitude:pin4.latitude longitude:pin4.longitude];
+    CLLocation *location5 = [[CLLocation alloc] initWithLatitude:pin5.latitude longitude:pin5.longitude];
+    CLLocation *location6 = [[CLLocation alloc] initWithLatitude:pin6.latitude longitude:pin6.longitude];
+    CLLocation *location7 = [[CLLocation alloc] initWithLatitude:pin7.latitude longitude:pin7.longitude];
+    CLLocation *location8 = [[CLLocation alloc] initWithLatitude:pin8.latitude longitude:pin8.longitude];
+    CLLocation *location9 = [[CLLocation alloc] initWithLatitude:pin9.latitude longitude:pin9.longitude];
+    CLLocation *location10 = [[CLLocation alloc] initWithLatitude:pin10.latitude longitude:pin10.longitude];
+    
+    self.downtownLocations = [[NSMutableArray alloc] initWithObjects:location1, location2, location3, location4, location5,
+                                         location6, location7, location8, location9, location10, nil];
     
     // Central Business District
     CLLocationCoordinate2D  points[10];
@@ -86,41 +110,33 @@
     bellPoints[5] = pin12;
     bellPoints[6] = pin11;
     
-    NSMutableDictionary *centriod = [@{@"centriod": [[CLLocation alloc] initWithLatitude:points[6].latitude longitude:points[6].longitude]} mutableCopy];
-    
-    NSMutableArray *centriods = [[NSMutableArray alloc] init];
-    [centriods addObject:centriod];
-    
     MKPolygon *bellPoly = [MKPolygon polygonWithCoordinates:bellPoints count:7];
     bellPoly.title = @"Belltown";
     [self.mapView addOverlay:bellPoly];
-
+    
     for(int i=0; i<10; i++)
     {
-        [self.mapView addAnnotation:[[CKMapPin alloc]initWithCoordinate:points[i] withPinType:kReadable withTitle:[NSString stringWithFormat:@"Pin %i", i]]];
+        CKMapPin *aPin = [[CKMapPin alloc]initWithCoordinate:points[i] withPinType:kReadable withTitle:[NSString stringWithFormat:@"Pin %i", i]];
+        [self.mapView addAnnotation: aPin];
         [self.mapView addOverlay:[MKCircle circleWithCenterCoordinate:points[i] radius:100]];
-        
-        
-        CLLocation *location1 = [[CLLocation alloc]initWithLatitude:points[6].latitude longitude:points[6].longitude];
-        CLLocation *location2 = [[CLLocation alloc]initWithLatitude:points[i+1].latitude longitude:points[i+1].longitude];
-        CLLocationDistance distance = [location1 distanceFromLocation:location2];
-        NSLog(@"pin %i -> pin %i distance %f",6, i+1, distance);
-        if(distance <500){
-            
-            float lat = ((CLLocation*)centriods[0][@"centriod"]).coordinate.latitude;
-            float longi = ((CLLocation*)centriods[0][@"centriod"]).coordinate.longitude;
-            
-            centriods[0][@"centriod"] = [[CLLocation alloc] initWithLatitude:(lat + points[i+1].latitude)*.5f
-                                                                   longitude:(longi + points[i+1].longitude)*.5f];
-            NSLog(@"%f, %f", ((CLLocation*)centriods[0][@"centriod"]).coordinate.latitude, ((CLLocation*)centriods[0][@"centriod"]).coordinate.longitude);
-        }
-        
     }
     
-    [self.mapView addAnnotation:[[CKMapPin alloc]initWithCoordinate:((CLLocation*)centriods[0][@"centriod"]).coordinate withPinType:kVisible withTitle:@"centriod"]];
-    [self.mapView addOverlay:[MKCircle circleWithCenterCoordinate:((CLLocation*)centriods[0][@"centriod"]).coordinate radius:150]];
     
     
+//    // Central Business District
+//    NSMutableArray *downtownLocations = [[NSMutableArray alloc] initWithObjects:location1, location2, location3, location4, location5,
+//                                                                                location6, location7, location8, location9, location10, nil];
+//    
+//    CKClusterPins *clusteredPins = [[CKClusterPins alloc]initWithCLLocations:downtownLocations andProximityDistance:500];
+//    
+//    NSMutableArray *clusters = [clusteredPins getClusters];
+//    
+//    for (CKCluster *cluster in clusters){
+//        CLLocationCoordinate2D aCoordinate = ((CKCluster*)cluster).centroid.coordinate;
+//        [self.mapView addAnnotation:[[CKMapPin alloc]initWithCoordinate:aCoordinate withPinType:kVisible withTitle:@"centriod"]];
+//        [self.mapView addOverlay:[MKCircle circleWithCenterCoordinate:aCoordinate radius:150]];
+//        NSLog(@"New centroid: %f, %f", aCoordinate.latitude, aCoordinate.longitude);
+//    }
 }
 
 #pragma mark - Delegate
@@ -133,7 +149,7 @@
         } else {
             pin.annotation = annotation;
         }
-        if ([((CKMapPin*)annotation).title isEqualToString:@"centriod"]) {
+        if ([((CKMapPin*)annotation).title isEqualToString:@"centroid"]) {
             pin.pinColor = MKPinAnnotationColorGreen;
         } else {
             pin.pinColor = MKPinAnnotationColorRed;
@@ -169,6 +185,52 @@
         return circleRender;
     }
     return nil;
+}
+
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+//    MKCoordinateRegion region;
+//    region.center = self.mapView.userLocation.coordinate;
+//    
+//    MKCoordinateSpan span;
+//    span.latitudeDelta  = .03;
+//    span.longitudeDelta = .03;
+//    region.span = span;
+//    
+//    if(region.center.longitude == -180.00000000){
+//        NSLog(@"Invalid region!");
+//    }else{
+//        [self.mapView setRegion:region animated:YES];
+//    }
+}
+
+-(void)mapView:(MKMapView *)mapView regionWillChangeAnimated:(BOOL)animated{
+    NSLog(@"will %f, %f",mapView.region.span.latitudeDelta, mapView.region.span.longitudeDelta);
+}
+
+-(void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated{
+    NSLog(@"did %f, %f",mapView.region.span.latitudeDelta , mapView.region.span.longitudeDelta);
+    NSLog(@"did %f, %f",mapView.region.span.latitudeDelta*12000, mapView.region.span.longitudeDelta*1200);
+    
+    // Central Business District
+    self.clusteredPins = [[CKClusterPins alloc]initWithCLLocations:self.downtownLocations andProximityDistance:500];
+    
+    NSMutableArray *clusters = [self.clusteredPins getClustersWithDistance:mapView.region.span.latitudeDelta*12000];
+    
+    for(CKMapPin* annotation in self.mapView.annotations){
+        if([annotation isKindOfClass:CKMapPin.class]){
+            if ([annotation.title isEqualToString:@"centroid"]) {
+                [self.mapView removeAnnotation:annotation];
+            }
+        }
+    }
+    
+    for (CKCluster *cluster in clusters){
+        CLLocationCoordinate2D aCoordinate = ((CKCluster*)cluster).centroid.coordinate;
+        [self.mapView addAnnotation:[[CKMapPin alloc]initWithCoordinate:aCoordinate withPinType:kVisible withTitle:@"centroid"]];
+//        [self.mapView addOverlay:[MKCircle circleWithCenterCoordinate:aCoordinate radius:150]];
+        NSLog(@"New centroid: %f, %f", aCoordinate.latitude, aCoordinate.longitude);
+    }
 }
 
 #pragma mark - Memory
