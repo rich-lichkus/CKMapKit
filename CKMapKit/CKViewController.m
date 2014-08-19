@@ -12,7 +12,9 @@
 #import "CKCluster.h"
 #import "CKClusterPins.h"
 
-@interface CKViewController () <MKMapViewDelegate>
+@interface CKViewController () <MKMapViewDelegate>{
+    BOOL _regionSet;
+}
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
 @property (weak, nonatomic) IBOutlet UILabel *lblLocation;
 
@@ -30,7 +32,7 @@
     [super viewDidLoad];
     self.mapView.delegate = self;
     self.mapView.showsUserLocation = YES;
-    
+    _regionSet = NO;
     [self.mapView.userLocation addObserver:self
                                 forKeyPath:@"location"
                                    options:(NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld)
@@ -120,23 +122,6 @@
         [self.mapView addAnnotation: aPin];
         [self.mapView addOverlay:[MKCircle circleWithCenterCoordinate:points[i] radius:100]];
     }
-    
-    
-    
-//    // Central Business District
-//    NSMutableArray *downtownLocations = [[NSMutableArray alloc] initWithObjects:location1, location2, location3, location4, location5,
-//                                                                                location6, location7, location8, location9, location10, nil];
-//    
-//    CKClusterPins *clusteredPins = [[CKClusterPins alloc]initWithCLLocations:downtownLocations andProximityDistance:500];
-//    
-//    NSMutableArray *clusters = [clusteredPins getClusters];
-//    
-//    for (CKCluster *cluster in clusters){
-//        CLLocationCoordinate2D aCoordinate = ((CKCluster*)cluster).centroid.coordinate;
-//        [self.mapView addAnnotation:[[CKMapPin alloc]initWithCoordinate:aCoordinate withPinType:kVisible withTitle:@"centriod"]];
-//        [self.mapView addOverlay:[MKCircle circleWithCenterCoordinate:aCoordinate radius:150]];
-//        NSLog(@"New centroid: %f, %f", aCoordinate.latitude, aCoordinate.longitude);
-//    }
 }
 
 #pragma mark - Delegate
@@ -189,19 +174,22 @@
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-//    MKCoordinateRegion region;
-//    region.center = self.mapView.userLocation.coordinate;
-//    
-//    MKCoordinateSpan span;
-//    span.latitudeDelta  = .03;
-//    span.longitudeDelta = .03;
-//    region.span = span;
-//    
-//    if(region.center.longitude == -180.00000000){
-//        NSLog(@"Invalid region!");
-//    }else{
-//        [self.mapView setRegion:region animated:YES];
-//    }
+    if(!_regionSet){
+        MKCoordinateRegion region;
+        region.center = self.mapView.userLocation.coordinate;
+        
+        MKCoordinateSpan span;
+        span.latitudeDelta  = .03;
+        span.longitudeDelta = .03;
+        region.span = span;
+        
+        if(region.center.longitude == -180.00000000){
+            NSLog(@"Invalid region!");
+        }else{
+            [self.mapView setRegion:region animated:YES];
+        }
+        _regionSet = YES;
+    }
 }
 
 -(void)mapView:(MKMapView *)mapView regionWillChangeAnimated:(BOOL)animated{
