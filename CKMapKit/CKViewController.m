@@ -116,12 +116,12 @@
     bellPoly.title = @"Belltown";
     [self.mapView addOverlay:bellPoly];
     
-    for(int i=0; i<10; i++)
-    {
-        CKMapPin *aPin = [[CKMapPin alloc]initWithCoordinate:points[i] withPinType:kReadable withTitle:[NSString stringWithFormat:@"Pin %i", i]];
-        [self.mapView addAnnotation: aPin];
-        [self.mapView addOverlay:[MKCircle circleWithCenterCoordinate:points[i] radius:100]];
-    }
+//    for(int i=0; i<10; i++)
+//    {
+//        CKMapPin *aPin = [[CKMapPin alloc]initWithCoordinate:points[i] withPinType:kReadable withTitle:[NSString stringWithFormat:@"Pin %i", i]];
+//        [self.mapView addAnnotation: aPin];
+//        [self.mapView addOverlay:[MKCircle circleWithCenterCoordinate:points[i] radius:100]];
+//    }
 }
 
 #pragma mark - Delegate
@@ -134,10 +134,10 @@
         } else {
             pin.annotation = annotation;
         }
-        if ([((CKMapPin*)annotation).title isEqualToString:@"centroid"]) {
-            pin.pinColor = MKPinAnnotationColorGreen;
-        } else {
+        if (((CKMapPin*)annotation).pinType == kReadable) {
             pin.pinColor = MKPinAnnotationColorRed;
+        } else {
+            pin.pinColor = MKPinAnnotationColorGreen;
         }
         pin.canShowCallout = YES;
         return pin;
@@ -215,9 +215,18 @@
     
     for (CKCluster *cluster in clusters){
         CLLocationCoordinate2D aCoordinate = ((CKCluster*)cluster).centroid.coordinate;
-        [self.mapView addAnnotation:[[CKMapPin alloc]initWithCoordinate:aCoordinate withPinType:kVisible withTitle:@"centroid"]];
-//        [self.mapView addOverlay:[MKCircle circleWithCenterCoordinate:aCoordinate radius:150]];
-        NSLog(@"New centroid: %f, %f", aCoordinate.latitude, aCoordinate.longitude);
+        
+        switch (cluster.locations.count) {
+            case 1: {
+                [self.mapView addAnnotation:[[CKMapPin alloc]initWithCoordinate:aCoordinate withPinType:kReadable withTitle:@"centroid"]];
+            }
+                break;
+                
+            default: {
+                [self.mapView addAnnotation:[[CKMapPin alloc]initWithCoordinate:aCoordinate withPinType:kVisible withTitle:@"centroid"]];
+            }
+                break;
+        }
     }
 }
 
