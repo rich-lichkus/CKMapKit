@@ -203,7 +203,7 @@
     // Central Business District
     self.clusteredPins = [[CKClusterPins alloc]initWithCLLocations:self.downtownLocations andProximityDistance:500];
     
-    NSMutableArray *clusters = [self.clusteredPins getClustersWithDistance:mapView.region.span.latitudeDelta*12000];
+    NSMutableArray *clusters = [self.clusteredPins getClustersWithDistance:mapView.region.span.latitudeDelta*10000];
     
     for(CKMapPin* annotation in self.mapView.annotations){
         if([annotation isKindOfClass:CKMapPin.class]){
